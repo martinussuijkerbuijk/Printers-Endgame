@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--      <script src="https://cdn.tailwindcss.com"></script>-->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Endgame/WasteLand</title>
+
+    <style>
+        .scrollbar-w-2::-webkit-scrollbar {
+          width: 0.25rem;
+          height: 0.25rem;
+        }
+
+        .scrollbar-track-blue-lighter::-webkit-scrollbar-track {
+          --bg-opacity: 1;
+          background-color: #f7fafc;
+          background-color: rgba(247, 250, 252, var(--bg-opacity));
+        }
+
+        .scrollbar-thumb-blue::-webkit-scrollbar-thumb {
+          --bg-opacity: 1;
+          background-color: #edf2f7;
+          background-color: rgba(237, 242, 247, var(--bg-opacity));
+        }
+
+        .scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+          border-radius: 0.25rem;
+        }
+        .extracted-content span{
+                    @apply bg-blue-500 text-white px-4 py-2 rounded-lg inline-block bg-gray-800 text-gray-300;
+                }
+
+    </style>
+</head>
+<body>
+    <!-- component -->
+<div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen bg-black">
+   <div class="flex sm:items-center justify-between py-3 ">
+      <div class="relative flex items-center space-x-4">
+         <div class="relative">
+            <span class="absolute text-blue-500 right-0 bottom-0">
+               <svg width="20" height="20">
+                  <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
+               </svg>
+            </span>
+         <img src="static/endgame.png" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full">
+         </div>
+         <div class="flex flex-col leading-tight">
+            <div class="text-4xl mt-1 flex items-center">
+               <span class="text-white mr-3">Endgame/WasteLand</span>
+            </div>
+         </div>
+      </div>
+<!--header-->
+   </div>
+   <div id="messages" class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+      <!--chat-message-left-->
+       <div class="chat-message">
+         <div class="flex items-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-2 items-start">
+               <div><span id="extracted-knox-1" class="px-4 py-2 rounded-lg inline-block bg-gray-800 text-gray-300">Knox had enough of it all!</span></div>
+            </div>
+            <img src="static/knox.png" alt="My profile" class="w-6 h-6 rounded-full order-1">
+         </div>
+      </div>
+       <!--chat-message-right-->
+      <div class="chat-message">
+         <div class="flex items-end justify-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-1 items-end">
+               <div><span id="extracted-cael-1" class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-gray-900 text-gray-300 ">Cael Is taking a break!</span></div>
+            </div>
+            <img src="static/cael.png" alt="My profile" class="w-6 h-6 rounded-full order-2">
+         </div>
+      </div>
+       <!--chat-message-left-->
+      <div class="chat-message">
+         <div class="flex items-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-2 items-start">
+               <div><span id="extracted-knox-2" class="px-4 py-2 rounded-lg inline-block bg-gray-800 text-gray-300">I need a scratch! It itches.</span></div>
+            </div>
+            <img src="static/knox.png" alt="My profile" class="w-6 h-6 rounded-full order-1">
+         </div>
+      </div>
+       <!--chat-message-right-->
+       <div class="chat-message">
+         <div class="flex items-end justify-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-1 items-end">
+               <div><span id="extracted-cael-2" class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-gray-900 text-gray-300 ">You folks go away!</span></div>
+            </div>
+            <img src="static/cael.png" alt="My profile" class="w-6 h-6 rounded-full order-2">
+         </div>
+      </div>
+   </div>
+    <div class="border-t-2 border-black px-4 pt-4 mb-2 sm:mb-0"></div>
+   </div>
+</div>
+
+
+
+<script>
+	const el = document.getElementById('messages')
+	el.scrollTop = el.scrollHeight
+</script>
+    <script>
+            var data = JSON.parse('{{ paragraph | tojson | safe }}');
+
+            for (var key in data) {
+                if (key === 'cael') {
+                    console.log(data[key]);
+                    var element_1 = document.getElementById('extracted-cael-1');
+                    var element_2 = document.getElementById('extracted-cael-2');
+                    if (element_1) { // Check if the element exists
+                        element_1.textContent = data[key][0];
+                        console.log(element_1.textContent);
+                    }
+                    if (element_2) { // Check if the element exists
+                        element_2.textContent = data[key][1];
+                        console.log(element_2.textContent);
+                    }
+                }
+                if (key === 'knox') {
+                    console.log(data[key]);
+                    var element_k1 = document.getElementById('extracted-knox-1');
+                    var element_k2 = document.getElementById('extracted-knox-2');
+                    if (element_k1) { // Check if the element exists
+                        element_k1.textContent = data[key][0];
+                        console.log(element_k1.textContent);
+                    }
+                    if (element_k2) { // Check if the element exists
+                        element_k2.textContent = data[key][1];
+                        console.log(element_k2.textContent);
+                    }
+                }
+
+            }
+
+    </script>
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById("message").value;
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message }),
+            }).then(res => res.json());
+            alert(response.response);
+        }
+    </script>
+</body>
+</html>

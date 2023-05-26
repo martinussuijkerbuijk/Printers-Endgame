@@ -25,11 +25,12 @@ def extract_and_display():
         if match:
             paragraph = match.group(0)
     paragraph = paragraph.replace('\"', '')
+    paragraph = paragraph.replace('\n', ' ')
+    conversation.append(paragraph)
     # add to conversation thread
-    data = {'cael_1': conversation[0], 'cael_2': conversation[1], 'knox_1': conversation[2],
-            'knox_2': conversation[3], }
+    data = {'cael': [conversation[0],conversation[1]], 'knox': [conversation[2], conversation[3]] }
     print(paragraph)
-    return render_template('index.html', paragraph=json.dumps(paragraph))
+    return render_template('index.html', paragraph=data)
 
 # @app.route('/get_paragraph')
 # def get_paragraph():
