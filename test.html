@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extracted Paragraph</title>
+    <script>
+        function displayParagraph() {
+            var paragraph = "{{ paragraph|e }}";  // Extracted paragraph from Flask template
+
+            // Set the paragraph text in the <div>
+            var div = document.getElementById('extracted-paragraph');
+            div.innerText = paragraph;
+        }
+    </script>
+</head>
+<body onload="displayParagraph()">
+    <div id="extracted-paragraph"></div>
+</body>
+</html>
+
+This HTML template contains a JavaScript function displayParagraph() that retrieves the extracted paragraph from the Flask template and sets it as the text content of the <div> element with the id "extracted-paragraph". The JavaScript function is called automatically when the page loads (onload="displayParagraph()").
+
+Replace 'path/to/your/file.txt' with the actual file path of the file you want to process, and 'Cael' with your specified variable. After running the code, Flask will serve the web application, and you can access it in your browser. The extracted paragraph will be displayed within the <div> element on the web page.

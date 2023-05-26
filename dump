@@ -1,0 +1,11 @@
+paragraph = paragraph.replace('\"', '')
+    # add to conversation thread
+    data = {'cael_1': conversation[0], 'cael_2': conversation[1], 'knox_1': conversation[2], 'knox_2': conversation[3],}
+    print(paragraph)
+    return render_template('index.html', data=json.dumps(data))
+
+<script type="text/javascript">
+        var data = JSON.parse('{{ data | tojson | safe}}');
+        for (var key in data) {
+            console.log(data[key]);
+        }

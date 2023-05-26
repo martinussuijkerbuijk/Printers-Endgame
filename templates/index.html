@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--      <script src="https://cdn.tailwindcss.com"></script>-->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <title>Endgame/WasteLand</title>
+    <script>
+        window.onload = function() {
+            var paragraph = "{{ paragraph|e }}";  // Extracted paragraph from Flask template
+            var withoutQuotes = paragraph.replace(/^"(.*)"$/, '$1');  // Remove double quotes
+
+            // Parse the extracted paragraph as HTML
+            var parser = new DOMParser();
+            var doc = parser.parseFromString(withoutQuotes, 'text/html');
+            console.log(typeof doc);
+            var extractedContent = doc.body.innerHTML;
+
+            // Set the extracted content in the <div>
+            var div = document.getElementById('extracted-cael-1');
+            div.innerHTML = extractedContent;
+        };
+
+    </script>
+    <style>
+        .scrollbar-w-2::-webkit-scrollbar {
+          width: 0.25rem;
+          height: 0.25rem;
+        }
+
+        .scrollbar-track-blue-lighter::-webkit-scrollbar-track {
+          --bg-opacity: 1;
+          background-color: #f7fafc;
+          background-color: rgba(247, 250, 252, var(--bg-opacity));
+        }
+
+        .scrollbar-thumb-blue::-webkit-scrollbar-thumb {
+          --bg-opacity: 1;
+          background-color: #edf2f7;
+          background-color: rgba(237, 242, 247, var(--bg-opacity));
+        }
+
+        .scrollbar-thumb-rounded::-webkit-scrollbar-thumb {
+          border-radius: 0.25rem;
+        }
+        .extracted-content span{
+                    @apply bg-blue-500 text-white px-4 py-2 rounded-lg inline-block bg-gray-800 text-gray-300;
+                }
+
+    </style>
+</head>
+<body>
+    <!-- component -->
+<div class="flex-1 p:2 sm:p-6 justify-between flex flex-col h-screen bg-black">
+   <div class="flex sm:items-center justify-between py-3 ">
+      <div class="relative flex items-center space-x-4">
+         <div class="relative">
+            <span class="absolute text-blue-500 right-0 bottom-0">
+               <svg width="20" height="20">
+                  <circle cx="8" cy="8" r="8" fill="currentColor"></circle>
+               </svg>
+            </span>
+         <img src="static/endgame.png" alt="" class="w-10 sm:w-16 h-10 sm:h-16 rounded-full">
+         </div>
+         <div class="flex flex-col leading-tight">
+            <div class="text-4xl mt-1 flex items-center">
+               <span class="text-white mr-3">Endgame/WasteLand</span>
+            </div>
+         </div>
+      </div>
+<!--header-->
+   </div>
+   <div id="messages" class="flex flex-col space-y-4 p-3 overflow-y-auto scrollbar-thumb-blue scrollbar-thumb-rounded scrollbar-track-blue-lighter scrollbar-w-2 scrolling-touch">
+      <!--chat-message-left-->
+       <div class="chat-message">
+         <div class="flex items-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-2 items-start">
+               <div><span id="extracted-knox-1" class="px-4 py-2 rounded-lg inline-block bg-gray-800 text-gray-300">I get the same error on Arch Linux (also with sudo)</span></div>
+            </div>
+            <img src="static/knox.png" alt="My profile" class="w-6 h-6 rounded-full order-1">
+         </div>
+      </div>
+       <!--chat-message-right-->
+      <div class="chat-message">
+         <div class="flex items-end justify-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-1 items-end">
+               <div><span id="extracted-cael-1" class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-gray-900 text-gray-300 ">Your error message says permission denied, npm global installs must be given root privileges. Your error message says permission denied, npm global installs must be given root privileges.</span></div>
+            </div>
+            <img src="static/cael.png" alt="My profile" class="w-6 h-6 rounded-full order-2">
+         </div>
+      </div>
+       <!--chat-message-left-->
+      <div class="chat-message">
+         <div class="flex items-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-2 items-start">
+               <div><span id="extracted-knox-2" class="px-4 py-2 rounded-lg inline-block bg-gray-800 text-gray-300">I get the same error on Arch Linux (also with sudo)</span></div>
+            </div>
+            <img src="static/knox.png" alt="My profile" class="w-6 h-6 rounded-full order-1">
+         </div>
+      </div>
+       <!--chat-message-right-->
+       <div class="chat-message">
+         <div class="flex items-end justify-end">
+            <div class="flex flex-col space-y-2 text-xl max-w-xl mx-2 order-1 items-end">
+               <div><span id="extracted-cael-2" class="px-4 py-2 rounded-lg inline-block rounded-br-none bg-gray-900 text-gray-300 ">Your error message says permission denied, npm global installs must be given root privileges. </span></div>
+            </div>
+            <img src="static/cael.png" alt="My profile" class="w-6 h-6 rounded-full order-2">
+         </div>
+      </div>
+   </div>
+    <div class="border-t-2 border-black px-4 pt-4 mb-2 sm:mb-0"></div>
+   </div>
+</div>
+
+
+
+<script>
+	const el = document.getElementById('messages')
+	el.scrollTop = el.scrollHeight
+</script>
+    <script>
+        async function sendMessage() {
+            const message = document.getElementById("message").value;
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message }),
+            }).then(res => res.json());
+            alert(response.response);
+        }
+    </script>
+</body>
+</html>
