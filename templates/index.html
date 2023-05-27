@@ -94,8 +94,10 @@
             </div>
         </div>
     </div>
-    <div class="border-t-2 border-black px-4 pt-4 mb-2 sm:mb-0"></div>
-</div>
+        <div class="bg-black justify-center rounded-lg rounded-b-none space-y-2 text-2xl order-1">
+            <div><span id="meta-text" class="text-gray-600 flex justify-center"></span></div>
+        </div>
+    </div>
 </div>
 
 
@@ -115,7 +117,7 @@
                 console.log('Data is ' + data);
 
                 for (var key in data) {
-                    if (key === 'cael') {
+                    if (key === 'Cael:') {
                         console.log(data[key]);
                         var element_1 = document.getElementById('extracted-cael-1');
                         var element_2 = document.getElementById('extracted-cael-2');
@@ -128,7 +130,7 @@
                             console.log(element_2.textContent);
                         }
                     }
-                    if (key === 'knox') {
+                    if (key === 'Knox:') {
                         console.log(data[key]);
                         var element_k1 = document.getElementById('extracted-knox-1');
                         var element_k2 = document.getElementById('extracted-knox-2');
@@ -139,6 +141,14 @@
                         if (element_k2) { // Check if the element exists
                             element_k2.textContent = data[key][1];
                             console.log(element_k2.textContent);
+                        }
+                    }
+                    if (key === 'meta') {
+                        console.log(data[key]);
+                        var element_meta = document.getElementById('meta-text');
+                        if (element_meta) { // Check if the element exists
+                            element_meta.textContent = data[key];
+                            console.log(element_meta.textContent);
                         }
                     }
 
