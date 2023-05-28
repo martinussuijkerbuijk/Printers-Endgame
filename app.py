@@ -26,18 +26,21 @@ def index():
 
 
 def extract_name(names):
+
     with open(file_path, 'r+') as file:
+
         content = file.read()
 
         paragraphs = {}
+        before_quotes = ""  # Initialize before_quotes
 
         # Find the first paragraph starting with the specified variable
         for name in names:
-            pattern = r'(^{}.*?\n\n)'.format(re.escape(name))
+            # pattern = r'(^{}.*?\n\n)'.format(re.escape(name))
+            pattern = r'(^{}.*?".*?(\n|$))'.format(re.escape(name))
             match = re.search(pattern, content, re.MULTILINE | re.DOTALL)
             if match:
                 paragraph = match.group(0)
-                paragraphs[name] = paragraph
 
                 # Remove the paragraph from the content
                 content = content.replace(paragraph, '\n', 1)
@@ -52,6 +55,10 @@ def extract_name(names):
                 # Write the updated content to the file
                 file.write(content)
 
+                before_quotes, rest = paragraph.split('"', 1) # Split at the first quote
+
+                paragraphs[name] = rest
+
         # Find the first paragraph
         match_meta = re.search(r'(.*?\n)', content, re.MULTILINE | re.DOTALL)
         if match_meta:
@@ -60,24 +67,27 @@ def extract_name(names):
         if paragraph_meta.startswith('Cael:') or paragraph_meta.startswith('Knox:'):
             paragraphs['meta'] = ''
         else:
-            # If the paragraph doesn't start with 'Cael:' or 'Knox:', handle it accordingly
-            # Save the paragraph to a variable, delete it and save the file again
-            non_name_paragraph = paragraph_meta  # Saving paragraph to a variable
+            if len(before_quotes) > 8:
+                paragraphs['meta'] = before_quotes
+            else:
+                # If the paragraph doesn't start with 'Cael:' or 'Knox:', handle it accordingly
+                # Save the paragraph to a variable, delete it and save the file again
+                non_name_paragraph = paragraph_meta  # Saving paragraph to a variable
 
-            # Remove the paragraph from the content
-            content = content.replace(non_name_paragraph, '\n', 1)
+                # Remove the paragraph from the content
+                content = content.replace(non_name_paragraph, '\n', 1)
 
-            # Strip leading newlines from the content
-            content = content.lstrip('\n')
+                # Strip leading newlines from the content
+                content = content.lstrip('\n')
 
-            # Move the file cursor to the beginning and truncate the file
-            file.seek(0)
-            file.truncate()
+                # Move the file cursor to the beginning and truncate the file
+                file.seek(0)
+                file.truncate()
 
-            # Write the updated content to the file
-            file.write(content)
-            print(non_name_paragraph)
-            paragraphs['meta'] = non_name_paragraph
+                # Write the updated content to the file
+                file.write(content)
+                print(non_name_paragraph)
+                paragraphs['meta'] = non_name_paragraph
 
 
     return paragraphs
@@ -104,20 +114,20 @@ def actors_to_data(data):
 def update_chat():
     def gen():
         while True:
-            paragraphs = extract_name(['Cael:', 'Knox:'])
+            paragraphs = extract_name(['Cael', 'Knox'])
             print(f"Paragraphs are: ", paragraphs)
             sleep(1)
             # meta_name, meta_content = extract_name()
 
-            dict_cael = paragraph_to_data(paragraphs['Cael:'], cael, 'Cael:')
-            dict_knox = paragraph_to_data(paragraphs['Knox:'], knox, 'Knox:')
+            dict_cael = paragraph_to_data(paragraphs['Cael'], cael, 'Cael')
+            dict_knox = paragraph_to_data(paragraphs['Knox'], knox, 'Knox')
             dict_meta = paragraph_to_data(paragraphs['meta'], meta, 'meta')
 
             data = dict_cael | dict_knox | dict_meta
             print(f"Data is {data}")
 
             yield f"data: {json.dumps(data)}\n\n"
-            sleep(random.randrange(10,15))
+            sleep(random.randrange(25,45))
 
     return Response(stream_with_context(gen()), mimetype='text/event-stream')
 
