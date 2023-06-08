@@ -1,5 +1,6 @@
 import re
-import os
+import serial
+import adafruit_thermal_printer
 from flask import Flask, render_template, jsonify, Response, stream_with_context
 import json
 from collections import deque
@@ -7,6 +8,24 @@ from time import sleep
 import random
 
 app = Flask(__name__)
+
+# Connect to UART
+uart_cael = serial.Serial("COM1", baudrate=19200, timeout=3000)
+uart_knox = serial.Serial("COM2", baudrate=19200, timeout=3000)
+
+#Initialize printer Cael
+ThermalPrinter_cael = adafruit_thermal_printer.get_printer_class(2.69)
+printer_cael = ThermalPrinter_cael(uart_cael)
+
+#Set parameter to upside down
+printer_cael.up_down_mode = True
+
+#Initialize printer Cael
+ThermalPrinter_knox = adafruit_thermal_printer.get_printer_class(2.69)
+printer_knox = ThermalPrinter_cael(uart_knox)
+
+#Set parameter to upside down
+printer_knox.up_down_mode = True
 
 file_path = './texts/Dialogue.txt'  # Replace with the actual file path
 
@@ -19,15 +38,50 @@ cael.append("Hello World 1!")
 knox.append("Hello World 2!")
 knox.append("Hello World 3!")
 
+def connect_test(printer_name):
+    printer_name.print('Hello from the thermal Printer! Think about your exhibition Running smooth!')
+    printer_name.feed(1)
+
 @app.route('/')
 def index():
     data = {'cael': list(cael), 'knox': list(knox)}
     return render_template('index.html', paragraph=data)
 
 
+def print_text_printer(printer, lines):
+    # Print lines in reversed order
+    for line in reversed(lines):
+        printer.print(line)
+    printer.feed(1)
+
+
+def print_max_line_length(printer, text):
+    line_length = 32
+    words = text.split()
+    current_line_length = 0
+    lines = []
+
+    for word in words:
+        word_length = len(word)
+
+        if current_line_length + word_length <= line_length:
+            # Word fits within the line length
+            if not lines:
+                lines.append(word)
+            else:
+                lines[-1] += " " + word
+            current_line_length += word_length + 1  # Account for the space after the word
+        else:
+            # Word doesn't fit within the line length
+            lines.append(word)
+            current_line_length = word_length + 1  # Account for the space after the word
+
+    print_text_printer(printer, lines)
+
+
 def extract_name(names):
 
-    with open(file_path, 'r+') as file:
+    with open(file_path, 'r+', encoding='utf-8') as file:
 
         content = file.read()
 
@@ -37,7 +91,7 @@ def extract_name(names):
         # Find the first paragraph starting with the specified variable
         for name in names:
             # pattern = r'(^{}.*?\n\n)'.format(re.escape(name))
-            pattern = r'(^{}.*?".*?(\n|$))'.format(re.escape(name))
+            pattern = r'(^{}.*?".*?(\n\n|$))'.format(re.escape(name))
             match = re.search(pattern, content, re.MULTILINE | re.DOTALL)
             if match:
                 paragraph = match.group(0)
@@ -57,6 +111,13 @@ def extract_name(names):
 
                 before_quotes, rest = paragraph.split('"', 1) # Split at the first quote
 
+                # Print the paragraph to printer
+                # if name == 'Cael':
+                #     print_max_line_length(printer_cael, rest)
+                #     sleep(random.randrange(1, 5))
+                # if name == 'Knox':
+                #     print_max_line_length(printer_knox, rest)
+                #     sleep(1)
                 paragraphs[name] = rest
 
         # Find the first paragraph
@@ -124,9 +185,16 @@ def update_chat():
             dict_meta = paragraph_to_data(paragraphs['meta'], meta, 'meta')
 
             data = dict_cael | dict_knox | dict_meta
-            print(f"Data is {data}")
 
             yield f"data: {json.dumps(data)}\n\n"
+            # Print the paragraph to printer
+
+            print_max_line_length(printer_cael, paragraphs['Knox'])
+            sleep(random.randrange(1, 5))
+
+            print_max_line_length(printer_knox, paragraphs['Cael'])
+            sleep(1)
+
             sleep(random.randrange(25,45))
 
     return Response(stream_with_context(gen()), mimetype='text/event-stream')
